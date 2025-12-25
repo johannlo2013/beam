@@ -1,130 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Live Stream</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<title>BEAM Live</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <style>
-        :root {
-            --bg: #f5f1eb;
-            --card: #ffffff;
-            --text: #1f2937;
-            --muted: #6b7280;
-            --border: #e5e1da;
-            --accent: #c4b5a5;
-        }
+<style>
+:root {
+    --bg: #f5f1eb;
+    --panel: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e1da;
+    --accent: #c4b5a5;
+    --live: #dc2626;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+* { box-sizing: border-box; }
 
-        body {
-            margin: 0;
-            background: var(--bg);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+body {
+    margin: 0;
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text);
+}
 
-        .card {
-            width: 100%;
-            max-width: 640px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 28px;
-        }
+/* ---------- TOP NAV ---------- */
 
-        h1 {
-            margin: 0 0 16px;
-            font-weight: 500;
-            font-size: 22px;
-        }
+.nav {
+    height: 64px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 20px;
+}
 
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
+.brand {
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.3px;
+}
 
-        input {
-            flex: 1;
-            padding: 12px 14px;
-            font-size: 15px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: #faf9f7;
-        }
+.search {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+}
 
-        input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
+.search input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #faf9f7;
+}
 
-        button {
-            padding: 12px 18px;
-            font-size: 15px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            background: var(--accent);
-            color: #000;
-        }
+.search input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
 
-        video {
-            width: 100%;
-            border-radius: 12px;
-            background: #000;
-        }
+.search button {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    cursor: pointer;
+}
 
-        .hint {
-            margin-top: 10px;
-            font-size: 13px;
-            color: var(--muted);
-        }
+/* ---------- MAIN LAYOUT ---------- */
 
-        .error {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #b91c1c;
-        }
-    </style>
+.main {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ---------- PLAYER ---------- */
+
+.player-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.player-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.live {
+    background: var(--live);
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.title {
+    font-weight: 500;
+}
+
+.viewer-count {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+video {
+    width: 100%;
+    border-radius: 12px;
+    background: black;
+}
+
+/* ---------- SIDE PANEL ---------- */
+
+.side {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+}
+
+.side-body {
+    padding: 16px;
+    font-size: 14px;
+    color: var(--muted);
+    flex: 1;
+}
+
+/* ---------- ERROR ---------- */
+
+.error {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #b91c1c;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 900px) {
+    .main {
+        grid-template-columns: 1fr;
+    }
+    .side {
+        display: none;
+    }
+}
+</style>
 </head>
+
 <body>
 
-<div class="card">
-    <h1>Watch Live</h1>
-
-    <div class="controls">
-        <input id="token" placeholder="Stream token" />
+<!-- NAV -->
+<div class="nav">
+    <div class="brand">Sunbeam Live</div>
+    <div class="search">
+        <input id="token" placeholder="Enter channel token" />
         <button onclick="play()">Watch</button>
     </div>
+</div>
 
-    <video id="video" controls playsinline></video>
+<!-- MAIN -->
+<div class="main">
 
-    <div id="error" class="error"></div>
-    <div class="hint">Enter the stream token to start watching.</div>
+    <!-- PLAYER -->
+    <div class="player-card">
+        <div class="player-header">
+            <div class="live">LIVE</div>
+            <div class="title" id="streamTitle">Waiting for stream</div>
+            <div class="viewer-count">— viewers</div>
+        </div>
+
+        <video id="video" controls playsinline></video>
+        <div id="error" class="error"></div>
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div class="side">
+        <div class="side-header">Stream Info</div>
+        <div class="side-body">
+            Chat and additional features will appear here.<br><br>
+            Keeping it minimal for now.
+        </div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
-const STREAM_HOST = "stream.thesunbeaming.co"; // your droplet IP
+const STREAM_HOST = "stream.thesunbeaming.co";
 
 function play() {
     const token = document.getElementById("token").value.trim();
     const video = document.getElementById("video");
     const error = document.getElementById("error");
+    const title = document.getElementById("streamTitle");
 
     error.textContent = "";
 
     if (!token) {
-        error.textContent = "Please enter a stream token.";
+        error.textContent = "Please enter a channel token.";
         return;
     }
+
+    title.textContent = token;
 
     const url = `https://${STREAM_HOST}/hls/${token}.m3u8`;
 
