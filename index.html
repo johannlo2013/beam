@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Live Stream Viewer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <title>Live Stream</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
+        :root {
+            --bg: #f5f1eb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e1da;
+            --accent: #c4b5a5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0f172a;
-            color: #e5e7eb;
-            font-family: system-ui, -apple-system, sans-serif;
             margin: 0;
-            padding: 0;
+            background: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,69 +31,88 @@
         }
 
         .card {
-            width: 90%;
-            max-width: 720px;
-            background: #020617;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-            text-align: center;
+            width: 100%;
+            max-width: 640px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
         }
 
         h1 {
-            margin-top: 0;
+            margin: 0 0 16px;
+            font-weight: 500;
+            font-size: 22px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         input {
-            width: 70%;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: none;
-            margin-right: 8px;
+            flex: 1;
+            padding: 12px 14px;
+            font-size: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
         }
 
         button {
-            padding: 12px 16px;
-            font-size: 16px;
-            border-radius: 8px;
+            padding: 12px 18px;
+            font-size: 15px;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
-            background: #22c55e;
+            background: var(--accent);
             color: #000;
         }
 
         video {
             width: 100%;
-            margin-top: 20px;
-            background: black;
-            border-radius: 8px;
+            border-radius: 12px;
+            background: #000;
+        }
+
+        .hint {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--muted);
         }
 
         .error {
-            color: #f87171;
-            margin-top: 12px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #b91c1c;
         }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>Watch Live Stream</h1>
+    <h1>Watch Live</h1>
 
-    <div>
-        <input id="token" placeholder="Enter stream token">
+    <div class="controls">
+        <input id="token" placeholder="Stream token" />
         <button onclick="play()">Watch</button>
     </div>
 
-    <video id="video" controls autoplay playsinline></video>
+    <video id="video" controls playsinline></video>
 
     <div id="error" class="error"></div>
+    <div class="hint">Enter the stream token to start watching.</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
-const SERVER_IP = "178.128.96.134"; // ← CHANGE IF NEEDED
+const STREAM_HOST = "stream.thesunbeaming.co"; // your droplet IP
 
 function play() {
     const token = document.getElementById("token").value.trim();
@@ -95,21 +126,20 @@ function play() {
         return;
     }
 
-    const streamUrl = `http://${SERVER_IP}/hls/${token}.m3u8`;
+    const url = `https://${STREAM_HOST}/hls/${token}.m3u8`;
 
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        // Safari
-        video.src = streamUrl;
+        video.src = url;
         video.play();
     } else if (Hls.isSupported()) {
         const hls = new Hls();
-        hls.loadSource(streamUrl);
+        hls.loadSource(url);
         hls.attachMedia(video);
-        hls.on(Hls.Events.ERROR, function (event, data) {
-            error.textContent = "Stream not found or not live.";
+        hls.on(Hls.Events.ERROR, () => {
+            error.textContent = "Stream is offline or unavailable.";
         });
     } else {
-        error.textContent = "Your browser does not support HLS.";
+        error.textContent = "Your browser does not support live playback.";
     }
 }
 </script>
