@@ -25,22 +25,20 @@ body {
     color: var(--text);
 }
 
-/* ---------- TOP NAV ---------- */
-
+/* NAV */
 .nav {
     height: 64px;
-    border-bottom: 1px solid var(--border);
     background: var(--panel);
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     padding: 0 24px;
-    gap: 20px;
+    gap: 16px;
 }
 
 .brand {
     font-weight: 600;
     font-size: 18px;
-    letter-spacing: 0.3px;
 }
 
 .search {
@@ -57,11 +55,6 @@ body {
     background: #faf9f7;
 }
 
-.search input:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
 .search button {
     padding: 10px 16px;
     border-radius: 10px;
@@ -70,34 +63,28 @@ body {
     cursor: pointer;
 }
 
-/* ---------- MAIN LAYOUT ---------- */
-
-.main {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 20px;
-    padding: 24px;
-    max-width: 1400px;
-    margin: 0 auto;
+/* PLAYER */
+.container {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 24px;
 }
 
-/* ---------- PLAYER ---------- */
-
-.player-card {
+.player {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 16px;
 }
 
-.player-header {
+.header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     margin-bottom: 10px;
 }
 
-.live {
+.badge {
     background: var(--live);
     color: white;
     font-size: 12px;
@@ -110,119 +97,83 @@ body {
     font-weight: 500;
 }
 
-.viewer-count {
-    margin-left: auto;
-    font-size: 13px;
-    color: var(--muted);
-}
-
 video {
     width: 100%;
     border-radius: 12px;
     background: black;
 }
 
-/* ---------- SIDE PANEL ---------- */
-
-.side {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-}
-
-.side-header {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    font-weight: 500;
-}
-
-.side-body {
-    padding: 16px;
-    font-size: 14px;
-    color: var(--muted);
-    flex: 1;
-}
-
-/* ---------- ERROR ---------- */
-
-.error {
+.status {
     margin-top: 10px;
     font-size: 14px;
-    color: #b91c1c;
-}
-
-/* ---------- RESPONSIVE ---------- */
-
-@media (max-width: 900px) {
-    .main {
-        grid-template-columns: 1fr;
-    }
-    .side {
-        display: none;
-    }
+    color: var(--muted);
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAV -->
 <div class="nav">
     <div class="brand">BEAM Live</div>
     <div class="search">
-        <input id="token" placeholder="Enter channel token" />
+        <input id="token" placeholder="Channel token" />
         <button onclick="play()">Watch</button>
     </div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
-
-    <!-- PLAYER -->
-    <div class="player-card">
-        <div class="player-header">
-            <div class="live">LIVE</div>
-            <div class="title" id="streamTitle">Waiting for stream</div>
-            <div class="viewer-count">— viewers</div>
+<div class="container">
+    <div class="player">
+        <div class="header">
+            <div id="liveBadge" class="badge" style="display:none;">LIVE</div>
+            <div id="streamTitle" class="title">No stream loaded</div>
         </div>
 
         <video id="video" controls playsinline></video>
-        <div id="error" class="error"></div>
+        <div id="status" class="status"></div>
     </div>
-
-    <!-- SIDE PANEL -->
-    <div class="side">
-        <div class="side-header">Stream Info</div>
-        <div class="side-body">
-            Chat and additional features will appear here.<br><br>
-            Keeping it minimal for now.
-        </div>
-    </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
 const STREAM_HOST = "stream.thesunbeaming.co";
 
-function play() {
+async function isStreamLive(url) {
+    try {
+        const res = await fetch(url, { method: "HEAD", cache: "no-store" });
+        return res.ok;
+    } catch {
+        return false;
+    }
+}
+
+async function play() {
     const token = document.getElementById("token").value.trim();
     const video = document.getElementById("video");
-    const error = document.getElementById("error");
     const title = document.getElementById("streamTitle");
+    const badge = document.getElementById("liveBadge");
+    const status = document.getElementById("status");
 
-    error.textContent = "";
+    status.textContent = "";
+    badge.style.display = "none";
 
     if (!token) {
-        error.textContent = "Please enter a channel token.";
+        status.textContent = "Enter a channel token.";
         return;
     }
 
     title.textContent = token;
 
     const url = `https://${STREAM_HOST}/hls/${token}.m3u8`;
+
+    const live = await isStreamLive(url);
+    if (!live) {
+        status.textContent = "Stream is offline.";
+        video.src = "";
+        return;
+    }
+
+    badge.style.display = "inline-block";
+    status.textContent = "";
 
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
         video.src = url;
@@ -231,11 +182,8 @@ function play() {
         const hls = new Hls();
         hls.loadSource(url);
         hls.attachMedia(video);
-        hls.on(Hls.Events.ERROR, () => {
-            error.textContent = "Stream is offline or unavailable.";
-        });
     } else {
-        error.textContent = "Your browser does not support live playback.";
+        status.textContent = "Your browser does not support playback.";
     }
 }
 </script>
