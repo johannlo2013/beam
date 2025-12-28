@@ -1,60 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>School Proxy Access</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f1ea;
-    color: #4a3f35;
-}
-.hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.box {
-    background: #fbf8f2;
-    padding: 60px;
-    border-radius: 20px;
-    max-width: 720px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-}
-button {
-    background: #c2b59b;
-    color: white;
-    border: none;
-    padding: 16px 36px;
-    border-radius: 30px;
-    font-size: 16px;
-    cursor: pointer;
-}
-button:hover {
-    background: #b0a387;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BEAM Proxy — Simple, Private Cloud Proxy</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      line-height: 1.6;
+    }
+    header {
+      padding: 4rem 1.5rem;
+      text-align: center;
+      background: radial-gradient(circle at top, #2563eb, #020617 60%);
+    }
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+      letter-spacing: 0.05em;
+    }
+    header span {
+      color: #93c5fd;
+    }
+    header p {
+      max-width: 700px;
+      margin: 1.5rem auto 0;
+      font-size: 1.15rem;
+      color: #c7d2fe;
+    }
+    .cta {
+      margin-top: 2.5rem;
+    }
+    .cta a {
+      display: inline-block;
+      padding: 0.9rem 1.8rem;
+      border-radius: 999px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .cta a:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+    section {
+      margin-bottom: 4rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 1.25rem;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #bfdbfe;
+    }
+    h3 {
+      margin-top: 0;
+      color: #93c5fd;
+    }
+    footer {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      border-top: 1px solid #1e293b;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+    .price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #93c5fd;
+    }
+    .muted {
+      color: #94a3b8;
+    }
+  </style>
 </head>
 <body>
-
-<div class="hero">
-  <div class="box">
-    <h1>Beam Proxy</h1>
+  <header>
+    <h1><span>BEAM</span> Proxy</h1>
     <p>
-      This proxy works directly through your device’s
-      <b>System Settings → Network → Proxy</b>.
-      No apps. No downloads.
+      A lightweight, private cloud proxy designed for developers, testers, and power users
+      who want simple, controlled access through a single trusted IP.
     </p>
-    <p>
-      Every individual receives a unique username and password after approval.
-    </p>
-    <br>
-    <a href="/request/"><button>Request Access</button></a>
-  </div>
-</div>
+    <div class="cta">
+      <a href="#pricing">Get Started</a>
+    </div>
+  </header>
 
+  <main>
+    <section>
+      <h2>What is BEAM Proxy?</h2>
+      <p class="muted">
+        BEAM Proxy is a private, authenticated forward proxy hosted on a
+        DigitalOcean VPS. It routes your web traffic through a dedicated server,
+        giving you a consistent cloud IP without the complexity of a full VPN.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why BEAM?</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Private by Design</h3>
+          <p>
+            Access is protected by authentication. This is not an open or shared proxy —
+            only authorized users can connect.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Simple & Lightweight</h3>
+          <p>
+            No client software, no tunneling overhead. Configure it once in your browser
+            or application and you’re ready to go.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Consistent Cloud IP</h3>
+          <p>
+            Route traffic through a single DigitalOcean IP for testing, access control,
+            and controlled outbound connections.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Transparent & Honest</h3>
+          <p>
+            BEAM Proxy does not promise anonymity or bypassing protections. It provides
+            predictable infrastructure — nothing more, nothing less.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How It Works</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>1. Authenticate</h3>
+          <p>Connect using your assigned username and password.</p>
+        </div>
+        <div class="card">
+          <h3>2. Route Traffic</h3>
+          <p>Your web requests are forwarded through the BEAM Proxy server.</p>
+        </div>
+        <div class="card">
+          <h3>3. Reach the Internet</h3>
+          <p>Websites see the proxy’s IP — not your local device.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <h2>Pricing</h2>
+      <div class="card">
+        <p class="price">$10 HKD<span class="muted"> / month</span></p>
+        <ul>
+          <li>Private authenticated proxy</li>
+          <li>Dedicated DigitalOcean VPS</li>
+          <li>HTTPS support</li>
+          <li>No traffic reselling or sharing</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Who It’s For</h2>
+      <div class="grid">
+        <div class="card"><h3>Developers</h3><p>Test APIs and services from a cloud IP.</p></div>
+        <div class="card"><h3>QA & Testing</h3><p>Reproduce location or IP‑based behavior.</p></div>
+        <div class="card"><h3>Power Users</h3><p>Centralize outbound traffic without a VPN.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>BEAM Proxy · Hosted on DigitalOcean · No tracking · No analytics</p>
+  </footer>
 </body>
 </html>
