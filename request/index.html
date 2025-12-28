@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Proxy Access</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+    background:#f5f1ea;
+    font-family: Arial;
+}
+.card {
+    background:#fffdf8;
+    max-width:400px;
+    margin:120px auto;
+    padding:40px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+input, button {
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+}
+button {
+    background:#c2b59b;
+    color:white;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+}
+#msg {
+    margin-top: 15px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>Proxy Access Request</h2>
+<p>Use your <b>student</b> email.</p>
+
+<input type="email" id="email" placeholder="0000000@student.isf.edu.hk">
+<button onclick="submitForm()">Submit</button>
+
+<div id="msg"></div>
+</div>
+
+<script>
+async function submitForm() {
+    const email = document.getElementById('email').value;
+    const msg = document.getElementById('msg');
+
+    msg.innerText = 'Submitting...';
+
+    const res = await fetch('https://.pythonanywhere.com/api/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    msg.innerText = data.message;
+}
+</script>
+
+</body>
+</html>
